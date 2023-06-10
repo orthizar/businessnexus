@@ -116,9 +116,9 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: build
+          name: build-android
           path: |
-            build/app/outputs/flutter-apk/*.apk
+            build/app/outputs/flutter-apk/*
 
   build-windows:
     name: Build Windows
@@ -160,6 +160,6 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: build
+          name: build-windows
           path: |
-            build/windows/runner/Release/*.exe
+            build/windows/runner/Release/*
