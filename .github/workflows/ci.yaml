@@ -63,14 +63,14 @@ jobs:
           channel: 'stable'
           cache: true
       
-      - name: Get dependencies
-        run: flutter pub get
-
       - name: Cache Flutter dependencies
-        uses: actions/cache@v2
+        uses: actions/cache/restore@v2
         with:
           path: ${{ env.HOME }}/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Get dependencies
+        run: flutter pub get
 
       - name: Flutter test
         run: flutter test
@@ -82,7 +82,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+        with:
+          fetch-depth: 0
+          
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -96,14 +98,14 @@ jobs:
           channel: 'stable'
           cache: true
       
-      - name: Get dependencies
-        run: flutter pub get
-
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
         with:
           path: ${{ env.HOME }}/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Get dependencies
+        run: flutter pub get
 
       - name: Build apk
         run: flutter build apk
@@ -125,6 +127,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -139,14 +143,14 @@ jobs:
           channel: 'stable'
           cache: true
       
-      - name: Get dependencies
-        run: flutter pub get
-
       - name: Cache Flutter dependencies
         uses: actions/cache@v2
         with:
           path: ${{ env.HOME }}/.pub-cache
           key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Get dependencies
+        run: flutter pub get
       
       - run: flutter config --enable-windows-desktop
       
