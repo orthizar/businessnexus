@@ -56,30 +56,21 @@ jobs:
       - name: Update pubspec version
         id: pubspec_version
         uses: stikkyapp/update-pubspec-version@v1
-        if: ${{ github.event_name == 'push' }}
-        with:
-          bump-build: false
-          strategy: ${{ needs.check-commit.outputs.version_bump }}
-      
-      - name: Update pubspec build number
-        id: pubspec_buildnumber
-        uses: stikkyapp/update-pubspec-version@v1
         with:
           bump-build: true
-          strategy: 'none'
+          strategy: ${{ needs.check-commit.outputs.version_bump }}
 
       - name: Push pubspec version
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add ./pubspec.yaml
-          git commit -m "ci: pubspec version bump from ${{ steps.pubspec_version.outputs.old-version }} to ${{ steps.pubspec_buildnumber.outputs.new-version }} [skip ci]"
+          git commit -m "ci: pubspec version bump from ${{ steps.pubspec_version.outputs.old-version }} to ${{ steps.pubspec_version.outputs.new-version }} [skip ci]"
           git push
 
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    needs: [check-commit]
     steps: 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -112,7 +103,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    needs: [check-commit]
     steps: 
       - name: Checkout code
         uses: actions/checkout@v3
