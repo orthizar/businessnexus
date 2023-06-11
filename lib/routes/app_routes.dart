@@ -1,6 +1,7 @@
+import 'package:businessnexus/bindings/business_dashboard_bindings.dart';
 import 'package:businessnexus/bindings/create_business_bindings.dart';
 import 'package:businessnexus/bindings/overview_bindings.dart';
-import 'package:businessnexus/screens/business_details_screen.dart';
+import 'package:businessnexus/screens/business_dashboard.dart';
 import 'package:businessnexus/screens/create_business_screen.dart';
 import 'package:businessnexus/screens/overview_screen.dart';
 import 'package:businessnexus/screens/settings_screen.dart';
@@ -23,9 +24,9 @@ class AppPages {
       transition: Transition.noTransition,
     ),
     GetPage(
-      name: Routes.businessDetails,
-      page: () => const BusinessDetailsScreen(),
-      binding: CreateBusinessBinding(),
+      name: Routes.businessDashboard,
+      page: () => BusinessDashboardScreen(),
+      binding: BusinessDashboardBinding(),
       transition: Transition.noTransition,
     ),
     GetPage(
@@ -38,7 +39,12 @@ class AppPages {
 
 class Routes {
   static const overview = '/overview';
-  static const createBusiness = '/create_business';
-  static const businessDetails = '/business_details';
   static const settings = '/settings';
+  static const createBusiness = '/create_business';
+  static const businessDashboard = '/business_dashboard';
+  static const businessFinances = '/business_finances';
+  static const businessEmployees = '/business_employees';
+  static const businessInventory = '/business_inventory';
+  static const businessProduction = '/business_production';
+  static const businessSales = '/business_sales';
 }

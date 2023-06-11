@@ -38,7 +38,7 @@ class OverviewScreen extends StatelessWidget {
                               businessController.businesses[index];
                           return ListTile(
                             onTap: () {
-                              Get.toNamed(Routes.businessDetails,
+                              Get.toNamed(Routes.businessDashboard,
                                   arguments: {"business": business});
                             },
                             leading: const Icon(Icons.business),
@@ -46,7 +46,8 @@ class OverviewScreen extends StatelessWidget {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Umsatz: \$${business.revenue}'),
+                                Text(
+                                    'Mitarbeiter: ${business.employees.length}\nId: ${business.id}'),
                               ],
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios),
@@ -61,7 +62,7 @@ class OverviewScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _createNewBusiness,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_business),
       ),
       bottomNavigationBar: const BottomMenu(),
     );
