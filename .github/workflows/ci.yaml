@@ -9,10 +9,12 @@ on:
       - reopened
       - edited
   push:
+    branches:
+      - main
 
 jobs:
-  versioning:
-    name: Versioning
+  check-commit:
+    name: Check commit message
     runs-on: ubuntu-latest
     outputs:
       version_bump: ${{ steps.version_bump.outputs.VERSION_BUMP }}
@@ -40,28 +42,43 @@ jobs:
             VERSION_BUMP="none"
           fi
           echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_OUTPUT
+
+  versioning:
+    name: Bump version
+    runs-on: ubuntu-latest
+    needs: [check-commit, analyze, test]
+    if: ${{ needs.check-commit.outputs.version_bump != 'none' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
         
       - name: Update pubspec version
-        if: ${{ steps.version_bump.outputs.VERSION_BUMP != 'none' }}
         id: pubspec_version
+        uses: stikkyapp/update-pubspec-version@v1
+        if: ${{ github.event_name == 'push' }}
+        with:
+          bump-build: false
+          strategy: ${{ needs.check-commit.outputs.version_bump }}
+      
+      - name: Update pubspec build number
+        id: pubspec_buildnumber
         uses: stikkyapp/update-pubspec-version@v1
         with:
           bump-build: true
-          strategy: ${{ steps.version_bump.outputs.VERSION_BUMP }}
-      
+          strategy: 'none'
+
       - name: Push pubspec version
-        if: ${{ steps.version_bump.outputs.VERSION_BUMP != 'none' }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add ./pubspec.yaml
-          git commit -m "ci: pubspec version bump from ${{ steps.pubspec_version.outputs.old-version }} to ${{ steps.pubspec_version.outputs.new-version }} [skip ci]"
+          git commit -m "ci: pubspec version bump from ${{ steps.pubspec_version.outputs.old-version }} to ${{ steps.pubspec_buildnumber.outputs.new-version }} [skip ci]"
           git push
 
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    needs: [versioning]
+    needs: [check-commit]
     steps: 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -86,7 +103,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.HOME }}/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
 
       - name: Flutter analyze
         run: flutter analyze
@@ -94,7 +111,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    needs: [versioning]
+    needs: [check-commit]
     steps: 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -127,8 +144,8 @@ jobs:
   build-android:
     name: Build Android
     runs-on: ubuntu-latest
-    needs: [versioning, analyze, test]
-    if: ${{ needs.versioning.outputs.version_bump != 'none' }}
+    needs: [check-commit, analyze, test, versioning]
+    if: ${{ needs.check-commit.outputs.version_bump != 'none' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -171,8 +188,8 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
-    needs: [versioning, analyze, test]
-    if: ${{ needs.versioning.outputs.version_bump != 'none' }}
+    needs: [check-commit, analyze, test, versioning]
+    if: ${{ needs.check-commit.outputs.version_bump != 'none' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -194,7 +211,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.HOME }}/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
 
       - name: Get dependencies
         run: flutter pub get
