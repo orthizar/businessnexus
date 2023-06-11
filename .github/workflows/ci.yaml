@@ -75,15 +75,62 @@ jobs:
       - name: Flutter test
         run: flutter test
 
-  build-android:
-    name: Build Android
+  versioning:
+    name: Build Preparation
     runs-on: ubuntu-latest
     needs: [analyze, test]
+    outputs:
+      version_bump: ${{ steps.version_bump.outputs.VERSION_BUMP }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Determine version bump
+        id: version_bump
+        run: |
+          COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+          MAJOR_WORDING="BREAKING[ -]CHANGE|major"
+          MINOR_WORDING="feat|minor"
+          PATCH_WORDING="fix|patch"
+          VERSION_BUMP=""
+          if [[ $COMMIT_MESSAGE =~ ^($MAJOR_WORDING|$MINOR_WORDING)(\(.*\))?: ]]; then
+            if [[ $COMMIT_MESSAGE =~ ($MAJOR_WORDING) ]]; then
+              VERSION_BUMP="major"
+            else
+              VERSION_BUMP="minor"
+            fi
+          elif [[ $COMMIT_MESSAGE =~ ^($PATCH_WORDING)(\(.*\))?: ]]; then
+            VERSION_BUMP="patch"
+          else
+            VERSION_BUMP="none"
+          fi
+          echo "::set-output name=VERSION_BUMP::$VERSION_BUMP"
+        
+      - name: Update pubspec version
+        if: ${{ steps.version_bump.outputs.VERSION_BUMP != 'none' }}
+        id: pubspec_version
+        uses: stikkyapp/update-pubspec-version@v1
         with:
-          fetch-depth: 0
+          bump-build: true
+          strategy: ${{ steps.version_bump.outputs.VERSION_BUMP }}
+      
+      - name: Push pubspec version
+        if: ${{ steps.version_bump.outputs.VERSION_BUMP != 'none' }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add ./pubspec.yaml
+          git commit -m "ci: pubspec version bump from ${{ steps.pubspec_version.outputs.old-version }} to ${{ steps.pubspec_version.outputs.new-version }} [skip ci]"
+          git push
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    needs: [analyze, test, versioning]
+    if: ${{ needs.versioning.outputs.version_bump != 'none' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
           
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -123,12 +170,11 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
-    needs: [analyze, test]
+    needs: [analyze, test, versioning]
+    if: ${{ needs.versioning.outputs.version_bump != 'none' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Set up Java
         uses: actions/setup-java@v3
