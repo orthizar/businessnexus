@@ -1,7 +1,6 @@
 import 'package:businessnexus/responsive.dart';
 import 'package:businessnexus/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:businessnexus/models/business.dart';
 import 'package:get/get.dart';
 
 class BusinessDashboardScreen extends StatelessWidget {
@@ -51,7 +50,6 @@ class BusinessDashboardScreen extends StatelessWidget {
       });
       return Container();
     }
-    Business business = Get.arguments["business"];
     return Scaffold(
       appBar: AppBar(
         title: Text(Get.arguments["business"].name),
