@@ -9,10 +9,12 @@ on:
       - reopened
       - edited
   push:
+    branches:
+      - main
 
 jobs:
-  versioning:
-    name: Versioning
+  check-commit:
+    name: Check commit message
     runs-on: ubuntu-latest
     outputs:
       version_bump: ${{ steps.version_bump.outputs.VERSION_BUMP }}
@@ -40,17 +42,26 @@ jobs:
             VERSION_BUMP="none"
           fi
           echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_OUTPUT
+
+  versioning:
+    name: Bump version
+    runs-on: ubuntu-latest
+    needs: [check-commit, analyze, test]
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
         
       - name: Update pubspec version
-        if: ${{ steps.version_bump.outputs.VERSION_BUMP != 'none' }}
+        if: ${{ needs.check-commit.outputs.version_bump != 'none' }}
         id: pubspec_version
         uses: stikkyapp/update-pubspec-version@v1
         with:
           bump-build: true
-          strategy: ${{ steps.version_bump.outputs.VERSION_BUMP }}
+          strategy: ${{ needs.check-commit.outputs.version_bump }}
       
       - name: Push pubspec version
-        if: ${{ steps.version_bump.outputs.VERSION_BUMP != 'none' }}
+        if: ${{ needs.check-commit.outputs.version_bump != 'none' }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -61,7 +72,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    needs: [versioning]
+    needs: [check-commit]
     steps: 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -94,7 +105,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    needs: [versioning]
+    needs: [check-commit]
     steps: 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -127,8 +138,8 @@ jobs:
   build-android:
     name: Build Android
     runs-on: ubuntu-latest
-    needs: [versioning, analyze, test]
-    if: ${{ needs.versioning.outputs.version_bump != 'none' }}
+    needs: [check-commit, versioning, analyze, test]
+    if: ${{ needs.check-commit.outputs.version_bump != 'none' && (success() || (needs.versioning.result == 'skipped' && failure())) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -171,8 +182,8 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
-    needs: [versioning, analyze, test]
-    if: ${{ needs.versioning.outputs.version_bump != 'none' }}
+    needs: [check-commit, versioning, analyze, test]
+    if: ${{ needs.check-commit.outputs.version_bump != 'none' && (success() || (needs.versioning.result == 'skipped' && failure())) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -194,7 +205,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ env.HOME }}/.pub-cache
-          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
 
       - name: Get dependencies
         run: flutter pub get
