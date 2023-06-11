@@ -104,7 +104,7 @@ jobs:
           else
             VERSION_BUMP="none"
           fi
-          echo "::set-output name=VERSION_BUMP::$VERSION_BUMP"
+          echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_OUTPUT
         
       - name: Update pubspec version
         if: ${{ steps.version_bump.outputs.VERSION_BUMP != 'none' }}
