@@ -1,24 +1,19 @@
-import 'package:businessnexus/components/company.dart';
-import 'package:businessnexus/screens/company_details_screen.dart';
-import 'package:businessnexus/screens/create_company_screen.dart';
+import 'package:businessnexus/controllers/business_controller.dart';
+import 'package:businessnexus/models/business.dart';
+import 'package:businessnexus/routes/app_routes.dart';
 import 'package:businessnexus/widgets/bottommenu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class OverviewScreen extends StatefulWidget {
-  const OverviewScreen({Key? key}) : super(key: key);
+class OverviewScreen extends StatelessWidget {
+  final BusinessController businessController = Get.find<BusinessController>();
 
-  @override
-  OverviewScreenState createState() => OverviewScreenState();
-}
+  OverviewScreen({super.key});
 
-class OverviewScreenState extends State<OverviewScreen> {
-  void _createNewCompany() {
-    Get.to(const CreateCompanyScreen())!.then((newCompany) {
-      if (newCompany != null) {
-        setState(() {
-          companies.add(newCompany);
-        });
+  void _createNewBusiness() {
+    Get.toNamed(Routes.createBusiness)!.then((newBusiness) {
+      if (newBusiness != null) {
+        businessController.addBusiness(newBusiness);
       }
     });
   }
@@ -33,34 +28,39 @@ class OverviewScreenState extends State<OverviewScreen> {
         children: [
           const SizedBox(height: 20),
           Expanded(
-            child: companies.isNotEmpty
-                ? ListView.builder(
-                    itemCount: companies.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Company company = companies[index];
-                      return ListTile(
-                        onTap: () {
-                          Get.off(() => BusinessDetailScreen(company: company));
+            child: Obx(
+              () {
+                return businessController.businesses.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: businessController.businesses.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          Business business =
+                              businessController.businesses[index];
+                          return ListTile(
+                            onTap: () {
+                              Get.toNamed(Routes.businessDetails,
+                                  arguments: {"business": business});
+                            },
+                            leading: const Icon(Icons.business),
+                            title: Text(business.name),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Umsatz: \$${business.revenue}'),
+                              ],
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                          );
                         },
-                        leading: const Icon(Icons.business),
-                        title: Text(company.name),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Level: ${company.level}'),
-                            Text('Umsatz: \$${company.revenue}'),
-                          ],
-                        ),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                      );
-                    },
-                  )
-                : const Text("No companies yet."),
+                      )
+                    : const ListTile(title: Text("No businesses yet."));
+              },
+            ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _createNewCompany,
+        onPressed: _createNewBusiness,
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: const BottomMenu(),
