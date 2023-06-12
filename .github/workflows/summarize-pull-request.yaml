@@ -83,4 +83,4 @@ jobs:
             }
             
             const formattedCommits = formatCommits(commits);
-            console.log(formattedCommits);    
+            return formattedCommits;    
