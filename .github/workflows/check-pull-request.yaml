@@ -19,12 +19,9 @@ jobs:
     steps:
       - name: Check pull request
         id: check-pull-request
+        env:
+          summary: ${{ inputs.summary }}
         run: |
-          summary=$(
-          cat <<-HEREDOC_EOF
-          ${{ inputs.summary }}
-          HEREDOC_EOF
-          )
           if [[ "$summary" =~ ^.*# (BREAKING[ -]CHANGES).* ]]; then
             version-bump="major"
           elif [[ "$summary" =~ ^.*# (Feature).* ]]; then
