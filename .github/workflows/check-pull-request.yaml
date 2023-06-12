@@ -22,7 +22,7 @@ jobs:
         # env:
         #   summary: ${{ inputs.summary }}
         run: |
-          $summary = "fix: asdsfdafdsa"
+          summary="fix: asdsfdafdsa"
           if [[ "$summary" =~ ^.*# (BREAKING[ -]CHANGES).* ]]; then
             version-bump="major"
           elif [[ "$summary" =~ ^.*# (Feature).* ]]; then
