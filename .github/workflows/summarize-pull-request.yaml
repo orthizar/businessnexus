@@ -10,6 +10,7 @@ jobs:
   summarize-pull-request:
     name: Summarize pull request
     runs-on: ubuntu-latest
+    permissions: write-all
     outputs:
       summary: ${{ steps.pr-description.outputs.result }}
     steps:
