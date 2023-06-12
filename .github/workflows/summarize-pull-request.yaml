@@ -57,7 +57,8 @@ jobs:
               for (const commit of commitsData) {
                 const commitId = commit['sha'].substring(0, 7);
                 const commitMessage = commit['commit']['message'];
-                const match = commitMessage.match(/^(\w+)\((.*?)\): (.*)/);
+                const regex = new RegExp("^(" + Object.keys(typeDictionary).join("|") +")(\(.*\))?:(.*)?");
+                const match = commitMessage.match(regex);
                 const commitWithLink = `[${commitId}](https://github.com/${commit['html_url']}): ${commitMessage}`;
                 if (match) {
                   const type = match[1];
