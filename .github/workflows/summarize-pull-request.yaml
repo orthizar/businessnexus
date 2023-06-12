@@ -30,12 +30,7 @@ jobs:
                 repo: context.repo.repo
               }
             );
-            console.log(commits[0].commit);
-            const commitMessages = commits.map(commit => {
-              const commitId = commit.sha.substring(0, 7);
-              const commitMessage = commit.commit.message;
-              return `[${commitId}](https://github.com/${context.repo.owner}/${context.repo.repo}/pull/${context.issue.number}/commits/${commitId}): ${commitMessage}`;
-            });
+            
             function formatCommitType(type) {
               const typeDictionary = {
                 build: 'Build',
@@ -59,14 +54,13 @@ jobs:
               const commitGroups = {"other": []};
           
               // Group commits by type
-              for (const commit of commitsData) {
-                const match = commit.commit.message.match(/^(\w+)\((.*?)\): (.*)/);
-                const commitWithLink = `[${id}](https://github.com/${commit.html_url}): ${message}`;
+              for (const commit of commits) {
+                const commitId = commit['sha'].substring(0, 7);
+                const commitMessage = commit['commit']['message'];
+                const match = commitMessage.match(/^(\w+)\((.*?)\): (.*)/);
+                const commitWithLink = `[${id}](https://github.com/${commit.html_url}): ${commitMessage}`;
                 if (match) {
                   const type = match[1];
-                  const id = commit.sha.substring(0, 7);
-                  const message = match[3];
-            
                   if (!commitGroups[type]) {
                     commitGroups[type] = [];
                   }
@@ -76,7 +70,6 @@ jobs:
                 }
               }
             
-          
               // Generate the formatted string
               let output = '';
               for (const type in commitGroups) {
