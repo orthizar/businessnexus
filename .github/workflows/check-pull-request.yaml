@@ -21,9 +21,9 @@ jobs:
         id: check-pull-request
         run: |
           summary=$(
-            cat <<EOF
+            cat <<'HEREDOC_EOF'
             ${{ inputs.summary }}
-            EOF
+            HEREDOC_EOF
           )
           if [[ "$summary" =~ ^.*# (BREAKING[ -]CHANGES).* ]]; then
             version-bump="major"
