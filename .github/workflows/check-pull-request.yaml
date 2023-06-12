@@ -20,11 +20,16 @@ jobs:
       - name: Check pull request
         id: check-pull-request
         run: |
-          if [[ ${{ inputs.summary }} =~ ^.*# (BREAKING[ -]CHANGES).* ]]; then
+          summary=$(
+            cat <<EOF
+            ${{ inputs.summary }}
+            EOF
+          )
+          if [[ "$summary" =~ ^.*# (BREAKING[ -]CHANGES).* ]]; then
             version-bump="major"
-          elif [[ ${{ inputs.summary }} =~ ^.*# (Feature).* ]]; then
+          elif [[ "$summary" =~ ^.*# (Feature).* ]]; then
             version-bump="minor"
-          elif [[ ${{ inputs.summary }} =~ ^.*# (Build|Bug Fix|Performance|Refactor).* ]]; then
+          elif [[ "$summary" =~ ^.*# (Build|Bug Fix|Performance|Refactor).* ]]; then
             version-bump="patch"
           else
             version-bump="none"
