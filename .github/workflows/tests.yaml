@@ -1,0 +1,69 @@
+name: Run tests
+
+on:
+  workflow_call:
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: "12.x"
+          cache: 'gradle'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.HOME }}/.pub-cache
+          key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Flutter analyze
+        run: flutter analyze
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: "12.x"
+          cache: 'gradle'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.HOME }}/.pub-cache
+          key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Flutter test
+        run: flutter test

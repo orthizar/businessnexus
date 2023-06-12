@@ -1,0 +1,88 @@
+name: Build
+
+on:
+  workflow_call:
+        
+jobs:
+    build-android:
+        name: Build Android
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+              
+          - name: Set up Java
+            uses: actions/setup-java@v3
+            with:
+              distribution: 'zulu'
+              java-version: "12.x"
+              cache: 'gradle'
+    
+          - name: Set up Flutter
+            uses: subosito/flutter-action@v2
+            with:
+              channel: 'stable'
+              cache: true
+          
+          - name: Cache Flutter dependencies
+            uses: actions/cache@v3
+            with:
+              path: ${{ env.HOME }}/.pub-cache
+              key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
+    
+          - name: Get dependencies
+            run: flutter pub get
+    
+          - name: Build apk
+            run: flutter build apk
+    
+          - name: Build apk split per abi
+            run: flutter build apk --split-per-abi
+          
+          - name: Upload build
+            uses: actions/upload-artifact@v3
+            with:
+              name: build-android
+              path: |
+                build/app/outputs/flutter-apk/*
+    
+    build-windows:
+      name: Build Windows
+      runs-on: windows-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+  
+        - name: Set up Java
+          uses: actions/setup-java@v3
+          with:
+            distribution: 'zulu'
+            java-version: "12.x"
+            cache: 'gradle'
+  
+        - name: Set up Flutter
+          uses: subosito/flutter-action@v2
+          with:
+            channel: 'stable'
+            cache: true
+        
+        - name: Cache Flutter dependencies
+          uses: actions/cache@v3
+          with:
+            path: ${{ env.HOME }}/.pub-cache
+            key: pub-cache-${{ hashFiles('**/pubspec.lock') }}
+  
+        - name: Get dependencies
+          run: flutter pub get
+        
+        - run: flutter config --enable-windows-desktop
+        
+        - name: Build windows
+          run: flutter build windows
+  
+        - name: Upload build
+          uses: actions/upload-artifact@v3
+          with:
+            name: build-windows
+            path: |
+              build/windows/runner/Release/*

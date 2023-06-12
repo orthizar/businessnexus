@@ -1,0 +1,35 @@
+name: Bump version
+
+on:
+  workflow_call:
+    inputs:
+      version-bump:
+        required: true
+        type: string
+    outputs:
+      new-version:
+          value: ${{ jobs.version.outputs.new-version }}
+jobs:
+  version:
+    name: Bump version
+    runs-on: ubuntu-latest
+    outputs:
+      new-version: ${{ steps.pubspec_version.outputs.new-version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Update pubspec version
+        id: pubspec_version
+        uses: stikkyapp/update-pubspec-version@v1
+        with:
+          bump-build: true
+          strategy: ${{ inputs.version-bump }}
+
+      - name: Push pubspec version
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add ./pubspec.yaml
+          git commit -m "ci: pubspec version bump from ${{ steps.pubspec_version.outputs.old-version }} to ${{ steps.pubspec_version.outputs.new-version }} [skip ci]"
+          git push

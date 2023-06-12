@@ -1,0 +1,26 @@
+name: Summarize pull request
+
+on:
+  workflow_call:
+    outputs:
+      summary:
+        description: 'The summary of the pull request'
+        value: ${{ jobs.summarize-pull-request.outputs.summary }}
+jobs:
+  summarize-pull-request:
+    name: Summarize pull request
+    runs-on: ubuntu-latest
+    outputs:
+      summary: ${{ steps.pr-description.outputs.result }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate pull request description
+        id: pr-description
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: |
+            const script = require('./.github/workflows/summarize-pull-request.js');
+            console.log(script({github, context}));    
