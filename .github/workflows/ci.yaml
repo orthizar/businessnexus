@@ -18,6 +18,22 @@ jobs:
   summarize-pull-request:
     name: Summarize pull request
     uses: ./.github/workflows/summarize-pull-request.yaml
+  
+  check-pull-request:
+    name: Check pull request
+    needs: [summarize-pull-request]
+    uses: ./.github/workflows/check-pull-request.yaml
+    with:
+      summary: ${{ needs.summarize-pull-request.outputs.summary }}
+
+  build:
+    name: Build
+    needs: [tests, check-pull-request]
+    runs-on: ubuntu-latest
+    if: ${{ needs.tests.result == 'success'  && needs.check-pull-request.outputs.version-bump != 'none'}}
+    steps:
+      - name: Build
+        uses: ./.github/workflows/build.yaml
 
   update-pull-request-description:
     name: Update pull request description

@@ -15,24 +15,9 @@ jobs:
     check-pull-request:
       name: Check pull request
       needs: [summarize-pull-request]
-      runs-on: ubuntu-latest
-      outputs:
-        version-bump: ${{ steps.check-pull-request.outputs.version-bump }}
-      steps:
-        - name: Check pull request
-          id: check-pull-request
-          run: |
-            if [[ ${{ needs.summarize-pull-request.outputs.summary }} =~ ^.*# (BREAKING[ -]CHANGES).* ]]; then
-              version-bump="major"
-            elif [[ ${{ needs.summarize-pull-request.outputs.summary }} =~ ^.*# (Feature).* ]]; then
-              version-bump="minor"
-            elif [[ ${{ needs.summarize-pull-request.outputs.summary }} =~ ^.*# (Build|Bug Fix|Performance|Refactor).* ]]; then
-              version-bump="patch"
-            else
-              version-bump="none"
-            fi
-            echo "version-bump: $version-bump"
-            echo "version-bump=$version-bump" >> $GITHUB_ENV
+      uses: ./.github/workflows/check-pull-request.yaml
+      with:
+        summary: ${{ needs.summarize-pull-request.outputs.summary }}
 
     tests:
       name: Run tests
