@@ -56,7 +56,7 @@ jobs:
                 const commitMessage = commit['commit']['message'];
                 const regex = new RegExp("^(" + Object.keys(typeDictionary).join("|") +")(\(.*\))?:(.*)?");
                 const match = commitMessage.match(regex);
-                const commitWithLink = `[${commitId}](https://github.com/${commit['html_url']}): ${commitMessage}`;
+                const commitWithLink = `[${commitId}](${commit['html_url']}): ${commitMessage}`;
                 if (match) {
                   const type = match[1];
                   if (!commitGroups[type]) {
