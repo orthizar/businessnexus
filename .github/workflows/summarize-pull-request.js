@@ -6,7 +6,7 @@ module.exports = ({github, context}) => {
       repo: context.repo.repo
     }
   );
-  console.log(commits.data.map(commit => commit.commit.message).join('\n'));
+  console.log("${commits.length} commits");
   const commitMessages = commits.data.map(commit => {
     const commitId = commit.sha.substring(0, 7);
     const commitMessage = commit.commit.message;
