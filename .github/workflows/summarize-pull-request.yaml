@@ -23,14 +23,15 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const {data: pull} = await github.rest.pulls.get(
+            const {data: commits} = await github.rest.pulls.listCommits(
               {
                 pull_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo
               }
             );
-            console.log(pull);
+            console.log(commits);
+            
             const commitMessages = commits.data.map(commit => {
               const commitId = commit.sha.substring(0, 7);
               const commitMessage = commit.commit.message;
