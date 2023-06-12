@@ -1,0 +1,38 @@
+name: Check commit message
+
+on:
+  workflow_call:
+      outputs:
+          version-bump:
+              description: "Type of version bump"
+              value: ${{ jobs.check-commit.outputs.version-bump }}
+jobs:
+  check-commit:
+    name: Check commit message
+    runs-on: ubuntu-latest
+    outputs:
+      version-bump: ${{ steps.version-bump.outputs.VERSION-BUMP }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Determine version bump
+        id: version-bump
+        run: |
+          commit_message=$(git log --format=%B -n 1 ${{ github.sha }})
+          echo "COMMIT_MESSAGE: $commit_message"
+          major_wording="BREAKING[ -]CHANGE|major"
+          minor_wording="feat|minor"
+          patch_wording="fix|patch"
+          version-bump=""
+          if [[ $commit_message =~ ^($major_wording|$minor_wording|$patch_wording)(\(.*\))?:(.*)?($major_wording)?(.*)? ]]; then
+            version-bump="major"
+          elif [[ $commit_message =~ ^($minor_wording)(\(.*\))?: ]]; then
+            version-bump="minor"
+          elif [[ $commit_message =~ ^($patch_wording)(\(.*\))?: ]]; then
+            version-bump="patch"
+          else
+            version-bump="none"
+          fi
+          echo "VERSION-BUMP: $version-bump"
+          echo "VERSION-BUMP=$version-bump" >> "$GITHUB_OUTPUT"
