@@ -19,9 +19,10 @@ jobs:
     steps:
       - name: Check pull request
         id: check-pull-request
-        env:
-          summary: ${{ inputs.summary }}
+        # env:
+        #   summary: ${{ inputs.summary }}
         run: |
+          $summary = "fix: asdsfdafdsa"
           if [[ "$summary" =~ ^.*# (BREAKING[ -]CHANGES).* ]]; then
             version-bump="major"
           elif [[ "$summary" =~ ^.*# (Feature).* ]]; then
