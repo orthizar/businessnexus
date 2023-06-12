@@ -1,5 +1,5 @@
 module.exports = ({github, context}) => {
-  const commits = github.rest.pulls.get(
+  const commits = await github.rest.pulls.get(
     {
       pull_number: context.issue.number,
       owner: context.repo.owner,
