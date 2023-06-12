@@ -1,10 +1,11 @@
 module.exports = ({github, context}) => {
-  const commits = github.pulls.listCommits({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    pull_number: context.issue.number
-  });
-  
+  const commits = github.rest.issues.get(
+    {
+      issue_number: context.issue.number,
+      owner: context.repo.owner,
+      repo: context.repo.repo
+    }
+  ).commits;
   const commitMessages = commits.data.map(commit => {
     const commitId = commit.sha.substring(0, 7);
     const commitMessage = commit.commit.message;
