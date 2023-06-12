@@ -54,7 +54,7 @@ jobs:
               const commitGroups = {"other": []};
           
               // Group commits by type
-              for (const commit of commits) {
+              for (const commit of commitsData) {
                 const commitId = commit['sha'].substring(0, 7);
                 const commitMessage = commit['commit']['message'];
                 const match = commitMessage.match(/^(\w+)\((.*?)\): (.*)/);
@@ -84,5 +84,5 @@ jobs:
               return output;
             }
             
-            const formattedCommits = formatCommits(commitMessages);
+            const formattedCommits = formatCommits(commits);
             console.log(formattedCommits);    
