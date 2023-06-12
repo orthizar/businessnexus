@@ -30,23 +30,20 @@ jobs:
                 repo: context.repo.repo
               }
             );
-            
-            function formatCommitType(type) {
-              const typeDictionary = {
-                build: 'Build',
-                ci: 'CI',
-                docs: 'Documentation',
-                feat: 'Feature',
-                fix: 'Bug Fix',
-                perf: 'Performance',
-                refactor: 'Refactor',
-                test: 'Testing',
-                style: 'Style',
-                other: 'Other'
-              };
-            
+            const typeDictionary = {
+              build: 'Build',
+              ci: 'CI',
+              docs: 'Documentation',
+              feat: 'Feature',
+              fix: 'Bug Fix',
+              perf: 'Performance',
+              refactor: 'Refactor',
+              test: 'Testing',
+              style: 'Style',
+              other: 'Other'
+            };
+            function formatCommitType(type) {       
               const formattedType = typeDictionary[type.toLowerCase()] || type;
-            
               return formattedType;
             }
             
