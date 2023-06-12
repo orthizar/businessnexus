@@ -73,7 +73,7 @@ jobs:
               // Generate the formatted string
               let output = '';
               for (const type in commitGroups) {
-                if (length(commitGroups[type]) > 0) {
+                if (commitGroups[type].length > 0) {
                   output += `## ${formatCommitType(type)}\n`;
                   for (const commit of commitGroups[type]) {
                     output += `- ${commit}\n`;
