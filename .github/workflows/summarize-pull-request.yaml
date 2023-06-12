@@ -31,8 +31,7 @@ jobs:
               }
             );
             console.log(commits);
-            
-            const commitMessages = commits.data.map(commit => {
+            const commitMessages = commits.map(commit => {
               const commitId = commit.sha.substring(0, 7);
               const commitMessage = commit.commit.message;
               return `[${commitId}](https://github.com/${context.repo.owner}/${context.repo.repo}/pull/${context.issue.number}/commits/${commitId}): ${commitMessage}`;
