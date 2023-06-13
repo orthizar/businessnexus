@@ -1,0 +1,10 @@
+version: 2
+enable-beta-ecosystems: true
+
+updates:
+  - package-ecosystem: "pub" 
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "Europe/Zurich"
