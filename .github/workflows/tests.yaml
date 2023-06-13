@@ -1,4 +1,4 @@
-name: Run tests
+name: Tests
 
 on:
   workflow_call:
@@ -65,5 +65,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Flutter test
-        run: flutter test
+      - name: Flutter test with coverage
+        run: flutter test --no-pub --coverage
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/
+          files: ./lcov.info

@@ -7,6 +7,7 @@ jobs:
     build-android:
         name: Build Android
         runs-on: ubuntu-latest
+        timeout-minutes: 30
         steps:
           - name: Checkout code
             uses: actions/checkout@v3
@@ -35,9 +36,6 @@ jobs:
     
           - name: Build apk
             run: flutter build apk
-    
-          - name: Build apk split per abi
-            run: flutter build apk --split-per-abi
           
           - name: Upload build
             uses: actions/upload-artifact@v3
@@ -49,6 +47,7 @@ jobs:
     build-windows:
       name: Build Windows
       runs-on: windows-latest
+      timeout-minutes: 30 
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
