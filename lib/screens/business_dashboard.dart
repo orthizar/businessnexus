@@ -1,43 +1,11 @@
+import 'package:businessnexus/models/business.dart';
 import 'package:businessnexus/responsive.dart';
 import 'package:businessnexus/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BusinessDashboardScreen extends StatelessWidget {
-  BusinessDashboardScreen({super.key});
-
-  final List<Map<String, dynamic>> cards = [
-    {
-      'title': 'Finances',
-      'iconData': Icons.payments,
-      'info': 'info',
-      'route': Routes.businessFinances,
-    },
-    {
-      'title': 'Employees',
-      'iconData': Icons.engineering,
-      'info': 'info',
-      'route': Routes.businessEmployees,
-    },
-    {
-      'title': 'Inventory',
-      'iconData': Icons.shelves,
-      'info': 'info',
-      'route': Routes.businessInventory,
-    },
-    {
-      'title': 'Production',
-      'iconData': Icons.factory,
-      'info': 'info',
-      'route': Routes.businessProduction,
-    },
-    {
-      'title': 'Sales',
-      'iconData': Icons.shopping_cart_checkout,
-      'info': 'info',
-      'route': Routes.businessSales,
-    },
-  ];
+  const BusinessDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +18,39 @@ class BusinessDashboardScreen extends StatelessWidget {
       });
       return Container();
     }
+    final Business business = Get.arguments["business"];
+    final List<Map<String, dynamic>> cards = [
+      {
+        'title': 'Finances',
+        'iconData': Icons.payments,
+        'info': 'Balance: ${business.financeModule.balance}',
+        'route': Routes.businessFinances,
+      },
+      // {
+      //   'title': 'Employees',
+      //   'iconData': Icons.engineering,
+      //   'info': 'Employees: ${business.employees.employees.length}',
+      //   'route': Routes.businessEmployees,
+      // },
+      // {
+      //   'title': 'Inventory',
+      //   'iconData': Icons.shelves,
+      //   'info': 'Items: ${business.inventory.items.length}',
+      //   'route': Routes.businessInventory,
+      // },
+      // {
+      //   'title': 'Production',
+      //   'iconData': Icons.factory,
+      //   'info': 'Production: ${business.production.output}',
+      //   'route': Routes.businessProduction,
+      // },
+      // {
+      //   'title': 'Sales',
+      //   'iconData': Icons.shopping_cart_checkout,
+      //   'info': 'Sales: ${business.sales.sales.length}',
+      //   'route': Routes.businessSales,
+      // },
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text(Get.arguments["business"].name),

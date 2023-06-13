@@ -25,7 +25,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.businessDashboard,
-      page: () => BusinessDashboardScreen(),
+      page: () => const BusinessDashboardScreen(),
       binding: BusinessDashboardBinding(),
       transition: Transition.noTransition,
     ),

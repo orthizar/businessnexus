@@ -46,8 +46,7 @@ class OverviewScreen extends StatelessWidget {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                    'Mitarbeiter: ${business.employees.length}\nId: ${business.id}'),
+                                Text('Id: ${business.id}'),
                               ],
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios),

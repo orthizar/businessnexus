@@ -1,6 +1,5 @@
 import 'package:businessnexus/controllers/business_controller.dart';
 import 'package:businessnexus/models/business.dart';
-import 'package:businessnexus/models/employee.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,19 +24,9 @@ class CreateBusinessScreenState extends State<CreateBusinessScreen> {
     String businessName = _nameController.text.trim();
     if (businessName.isNotEmpty) {
       Business newBusiness = Business(
-          id: businessController.businesses.length,
-          name: businessName,
-          employees: [
-            Employee(
-              id: 1,
-              name: 'John',
-              surname: 'Doe',
-              employeeType: 'Manager',
-              salary: 5000,
-              lowerBound: 4000,
-              upperBound: 6000,
-            ),
-          ]);
+        id: businessController.businesses.length,
+        name: businessName,
+      );
       Get.back(result: newBusiness);
     }
   }
