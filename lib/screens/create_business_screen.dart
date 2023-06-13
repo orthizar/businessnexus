@@ -47,6 +47,8 @@ class CreateBusinessScreenState extends State<CreateBusinessScreen> {
               decoration: const InputDecoration(
                 labelText: 'Business Name',
               ),
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _createBusiness(),
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
