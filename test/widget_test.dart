@@ -112,4 +112,16 @@ void main() {
       expect(find.text("Finances"), findsOneWidget);
     });
   });
+  // Switch to SettingsScreen and check if Appbar title is "Settings"
+  group('SettingsScreen', () {
+    testWidgets('should display the settings screen',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(BusinessNexusApp());
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.pumpAndSettle();
+
+      AppBar appbar = tester.firstWidget(find.byType(AppBar));
+      assert((appbar.title as Text).data == "Settings");
+    });
+  });
 }
