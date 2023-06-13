@@ -1,4 +1,9 @@
 name: CI
+permissions: write-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
 
 on:
   pull_request:
@@ -7,25 +12,20 @@ on:
     types: 
       - opened
       - reopened
-      - edited
       - synchronize
+      - ready_for_review
+    paths-ignore:
+      - 'docs/**'
 
 jobs:
   tests:
     name: Run tests
     uses: ./.github/workflows/tests.yaml
 
-  summarize-pull-request:
-    name: Summarize pull request
-    uses: ./.github/workflows/summarize-pull-request.yaml
-
-  update-pull-request-description:
-    name: Update pull request description
-    needs: [summarize-pull-request]
+  build:
+    name: Build
+    needs: [tests]
     runs-on: ubuntu-latest
     steps:
-      - name: Update pull request description
-        uses: riskledger/update-pr-description@v2
-        with:
-          body: ${{ needs.summarize-pull-request.outputs.summary }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
+        uses: ./.github/workflows/build.yaml
