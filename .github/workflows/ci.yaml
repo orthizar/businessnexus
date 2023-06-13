@@ -16,6 +16,11 @@ on:
       - ready_for_review
     paths-ignore:
       - 'docs/**'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
 
 jobs:
   tests:
