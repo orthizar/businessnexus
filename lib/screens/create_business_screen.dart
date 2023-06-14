@@ -1,5 +1,8 @@
 import 'package:businessnexus/controllers/business_controller.dart';
+import 'package:businessnexus/models/bill.dart';
 import 'package:businessnexus/models/business.dart';
+import 'package:businessnexus/models/item.dart';
+import 'package:businessnexus/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,6 +30,22 @@ class CreateBusinessScreenState extends State<CreateBusinessScreen> {
         id: businessController.businesses.length,
         name: businessName,
       );
+      newBusiness.financeModule.bills.add(Bill(
+        id: 0,
+        dueDate: DateTime.now(),
+        items: [
+          Item(id: 0, name: 'Test Item', price: 10.0, quantity: 1),
+        ],
+        isPaid: false,
+        total: 999.95,
+      ));
+      newBusiness.financeModule.transactions.add(Transaction(
+        id: 0,
+        description: 'Test Transaction',
+        total: 399.50,
+        creationDate: DateTime.now(),
+        isPending: true,
+      ));
       Get.back(result: newBusiness);
     }
   }

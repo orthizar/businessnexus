@@ -3,13 +3,13 @@ import 'package:businessnexus/bindings/create_business_bindings.dart';
 import 'package:businessnexus/bindings/overview_bindings.dart';
 import 'package:businessnexus/screens/business_dashboard.dart';
 import 'package:businessnexus/screens/create_business_screen.dart';
+import 'package:businessnexus/screens/modules/business_finances_screen.dart';
 import 'package:businessnexus/screens/overview_screen.dart';
 import 'package:businessnexus/screens/settings_screen.dart';
 import 'package:get/get.dart';
 
 class AppPages {
   static const initial = Routes.overview;
-
   static final routes = [
     GetPage(
       name: Routes.overview,
@@ -32,6 +32,37 @@ class AppPages {
     GetPage(
       name: Routes.settings,
       page: () => const SettingsScreen(),
+      transition: Transition.noTransition,
+    ),
+    // routes for modules
+    GetPage(
+      name: Routes.businessFinances,
+      page: () => BusinessFinancesScreen(),
+      binding: BusinessDashboardBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: Routes.businessEmployees,
+      page: () => const BusinessDashboardScreen(),
+      binding: BusinessDashboardBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: Routes.businessInventory,
+      page: () => const BusinessDashboardScreen(),
+      binding: BusinessDashboardBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: Routes.businessProduction,
+      page: () => const BusinessDashboardScreen(),
+      binding: BusinessDashboardBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: Routes.businessSales,
+      page: () => const BusinessDashboardScreen(),
+      binding: BusinessDashboardBinding(),
       transition: Transition.noTransition,
     ),
   ];

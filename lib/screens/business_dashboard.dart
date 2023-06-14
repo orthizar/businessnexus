@@ -23,7 +23,8 @@ class BusinessDashboardScreen extends StatelessWidget {
       {
         'title': 'Finances',
         'iconData': Icons.payments,
-        'info': 'Balance: ${business.financeModule.balance}',
+        'info':
+            'Balance: ${business.financeModule.balance}\nBills: ${business.financeModule.bills.where((element) => !element.isPaid).length}',
         'route': Routes.businessFinances,
       },
       // {
@@ -66,30 +67,36 @@ class BusinessDashboardScreen extends StatelessWidget {
                 crossAxisSpacing: !Responsive.isMobile(context) ? 15 : 12,
                 mainAxisSpacing: 12.0),
             itemBuilder: (context, i) {
-              return Card(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(cards[i]['iconData']),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15, bottom: 4),
-                      child: Text(
-                        cards[i]['title'],
-                        style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600),
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed(cards[i]['route'],
+                      arguments: {"business": business});
+                },
+                child: Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(cards[i]['iconData']),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15, bottom: 4),
+                        child: Text(
+                          cards[i]['title'],
+                          style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                    Text(
-                      cards[i]['info'],
-                      style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ],
+                      Text(
+                        cards[i]['info'],
+                        style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }),

@@ -2,14 +2,16 @@ import 'package:businessnexus/models/item.dart';
 import 'package:businessnexus/models/service.dart';
 
 class Bill {
-  String status;
+  int id;
+  bool isPaid;
   DateTime dueDate;
   double total;
   List<Item> items;
   List<Service> services;
 
   Bill({
-    required this.status,
+    required this.id,
+    required this.isPaid,
     required this.dueDate,
     required this.total,
     this.items = const [],
@@ -18,7 +20,8 @@ class Bill {
 
   Map<String, dynamic> toJson() {
     return {
-      'status': status,
+      'id': id,
+      'status': isPaid,
       'dueDate': dueDate.toIso8601String(),
       'total': total,
       'items': items.map((item) => item.toJson()).toList(),
@@ -28,7 +31,8 @@ class Bill {
 
   factory Bill.fromJson(Map<String, dynamic> json) {
     return Bill(
-      status: json['status'] as String,
+      id: json['id'] as int,
+      isPaid: json['isPaid'] as bool,
       dueDate: DateTime.parse(json['dueDate'] as String),
       total: json['total'] as double,
       items: (json['items'] as List<Map<String, dynamic>>)
