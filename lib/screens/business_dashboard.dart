@@ -67,12 +67,12 @@ class BusinessDashboardScreen extends StatelessWidget {
                 crossAxisSpacing: !Responsive.isMobile(context) ? 15 : 12,
                 mainAxisSpacing: 12.0),
             itemBuilder: (context, i) {
-              return GestureDetector(
-                onTap: () {
-                  Get.toNamed(cards[i]['route'],
-                      arguments: {"business": business});
-                },
-                child: Card(
+              return Card(
+                child: InkWell(
+                  onTap: () {
+                    Get.toNamed(cards[i]['route'],
+                        arguments: {"business": business});
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
