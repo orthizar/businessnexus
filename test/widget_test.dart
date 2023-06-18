@@ -112,7 +112,7 @@ void main() {
       expect(find.text("Finances"), findsOneWidget);
     });
   });
-  // Switch to SettingsScreen and check if Appbar title is "Settings"
+
   group('SettingsScreen', () {
     testWidgets('should display the settings screen',
         (WidgetTester tester) async {
@@ -122,6 +122,58 @@ void main() {
 
       AppBar appbar = tester.firstWidget(find.byType(AppBar));
       assert((appbar.title as Text).data == "Settings");
+    });
+  });
+
+  group('FinancesScreen', () {
+    testWidgets('should display the finances screen',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(BusinessNexusApp());
+      final String businessName = generateRandomString(10);
+      await createBusiness(tester, businessName);
+      await openBusinessDashboard(tester, businessName);
+
+      await tester.tap(find.text("Finances"));
+      await tester.pumpAndSettle();
+
+      AppBar appbar = tester.firstWidget(find.byType(AppBar));
+      assert((appbar.title as Text).data == "Finances of $businessName");
+    });
+  });
+
+  group('FinancesSubmoduleScreen', () {
+    testWidgets('should display the transactions submodule screen',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(BusinessNexusApp());
+      final String businessName = generateRandomString(10);
+      await createBusiness(tester, businessName);
+      await openBusinessDashboard(tester, businessName);
+
+      await tester.tap(find.text("Finances"));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text("Transactions"));
+      await tester.pumpAndSettle();
+
+      AppBar appbar = tester.firstWidget(find.byType(AppBar));
+      assert((appbar.title as Text).data == "Transactions of $businessName");
+    });
+
+    testWidgets('should display the bills submodule screen',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(BusinessNexusApp());
+      final String businessName = generateRandomString(10);
+      await createBusiness(tester, businessName);
+      await openBusinessDashboard(tester, businessName);
+
+      await tester.tap(find.text("Finances"));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text("Bills"));
+      await tester.pumpAndSettle();
+
+      AppBar appbar = tester.firstWidget(find.byType(AppBar));
+      assert((appbar.title as Text).data == "Bills of $businessName");
     });
   });
 }
