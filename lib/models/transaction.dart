@@ -2,7 +2,7 @@ class Transaction {
   int id;
   int? billId;
   String description;
-  double total;
+  double amount;
   DateTime creationDate;
   DateTime? completionDate;
   bool isPending;
@@ -11,7 +11,7 @@ class Transaction {
     required this.id,
     this.billId,
     required this.description,
-    required this.total,
+    required this.amount,
     required this.creationDate,
     this.completionDate,
     required this.isPending,
@@ -22,7 +22,7 @@ class Transaction {
       'id': id,
       'billId': billId,
       'description': description,
-      'total': total,
+      'total': amount,
       'creationDate': creationDate.toIso8601String(),
       'completionDate': completionDate?.toIso8601String(),
       'isPending': isPending,
@@ -34,7 +34,7 @@ class Transaction {
       id: json['id'] as int,
       billId: json['billId'] as int?,
       description: json['description'] as String,
-      total: json['total'] as double,
+      amount: json['total'] as double,
       creationDate: DateTime.parse(json['creationDate'] as String),
       completionDate: json['completionDate'] == null
           ? null

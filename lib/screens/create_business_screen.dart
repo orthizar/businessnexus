@@ -42,7 +42,7 @@ class CreateBusinessScreenState extends State<CreateBusinessScreen> {
       newBusiness.financeModule.transactions.add(Transaction(
         id: 0,
         description: 'Test Transaction',
-        total: 399.50,
+        amount: 399.50,
         creationDate: DateTime.now(),
         isPending: true,
       ));

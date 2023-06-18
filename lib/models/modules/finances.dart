@@ -22,7 +22,7 @@ class FinanceModule {
   void _calculateBalance() {
     double total = 0;
     for (var transaction in transactions) {
-      total += transaction.total;
+      total += transaction.amount;
     }
     balance.value = total;
   }
