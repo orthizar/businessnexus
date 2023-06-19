@@ -34,6 +34,7 @@ class _BottomMenuState extends State<BottomMenu> {
   Widget build(BuildContext context) {
     final selectedIndex = navigationItems
         .indexWhere((element) => element['route'] == Get.currentRoute);
+
     return BottomNavigationBar(
       items: [
         for (var navigationItem in navigationItems)
@@ -44,7 +45,7 @@ class _BottomMenuState extends State<BottomMenu> {
             label: navigationItem['label'] as String,
           )
       ],
-      currentIndex: selectedIndex,
+      currentIndex: selectedIndex == -1 ? 0 : selectedIndex,
       onTap: _onItemTapped,
     );
   }

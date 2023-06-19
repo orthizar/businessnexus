@@ -1,15 +1,23 @@
+import 'package:businessnexus/models/modules/finances.dart';
+
 class Business {
   int id;
   String name;
-  double revenue;
+  late FinanceModule financeModule;
 
-  Business({required this.id, required this.name, required this.revenue});
+  Business({
+    required this.id,
+    required this.name,
+    FinanceModule? financeModule,
+  }) {
+    this.financeModule = financeModule ?? FinanceModule();
+  }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
-      'revenue': revenue,
+      'financeModule': financeModule.toJson(),
     };
   }
 
@@ -17,7 +25,7 @@ class Business {
     return Business(
       id: json['id'] as int,
       name: json['name'] as String,
-      revenue: json['revenue'] as double,
+      financeModule: FinanceModule.fromJson(json['financeModule']),
     );
   }
 }

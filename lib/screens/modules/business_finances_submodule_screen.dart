@@ -1,10 +1,10 @@
+import 'package:businessnexus/models/business.dart';
 import 'package:businessnexus/routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:businessnexus/models/business.dart';
 import 'package:get/get.dart';
 
-class BusinessDetailsScreen extends StatelessWidget {
-  const BusinessDetailsScreen({super.key});
+class BusinessFinancesSubmoduleScreen extends StatelessWidget {
+  const BusinessFinancesSubmoduleScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,23 +17,15 @@ class BusinessDetailsScreen extends StatelessWidget {
       });
       return Container();
     }
-    Business business = Get.arguments["business"];
+    final Business business = Get.arguments["business"];
+    final Map<String, dynamic> submodule = Get.arguments["submodule"];
     return Scaffold(
       appBar: AppBar(
-        title: Text(Get.arguments["business"].name),
+        title: Text('${submodule["title"]} of ${business.name}'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
-            Text(
-              'Umsatz: ${business.revenue}',
-              style: const TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
+        child: submodule["details"],
       ),
     );
   }
