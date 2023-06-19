@@ -37,10 +37,10 @@ class FinanceModule {
 
   factory FinanceModule.fromJson(Map<String, dynamic> json) {
     return FinanceModule(
-      bills: (json['bills'] as List<Map<String, dynamic>>)
+      bills: (json['bills'] as List<dynamic>)
           .map((billJson) => Bill.fromJson(billJson))
           .toList(),
-      transactions: (json['transactions'] as List<Map<String, dynamic>>)
+      transactions: (json['transactions'] as List<dynamic>)
           .map((transactionJson) => Transaction.fromJson(transactionJson))
           .toList(),
     );

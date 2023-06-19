@@ -39,7 +39,7 @@ class AppPages {
     // routes for modules
     GetPage(
       name: Routes.businessFinances,
-      page: () => BusinessFinancesScreen(),
+      page: () => const BusinessFinancesScreen(),
       binding: BusinessDashboardBinding(),
       transition: Transition.noTransition,
     ),

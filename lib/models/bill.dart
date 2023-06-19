@@ -21,7 +21,7 @@ class Bill {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'status': isPaid,
+      'isPaid': isPaid,
       'dueDate': dueDate.toIso8601String(),
       'total': total,
       'items': items.map((item) => item.toJson()).toList(),
@@ -35,10 +35,10 @@ class Bill {
       isPaid: json['isPaid'] as bool,
       dueDate: DateTime.parse(json['dueDate'] as String),
       total: json['total'] as double,
-      items: (json['items'] as List<Map<String, dynamic>>)
+      items: (json['items'] as List<dynamic>)
           .map((itemJson) => Item.fromJson(itemJson))
           .toList(),
-      services: (json['services'] as List<Map<String, dynamic>>)
+      services: (json['services'] as List<dynamic>)
           .map((serviceJson) => Service.fromJson(serviceJson))
           .toList(),
     );
